@@ -1,0 +1,54 @@
+# SHA 40% — from best_ckpt/sha-L40
+tag: sha-L40
+seed: 2024
+output: outputs
+print_freq: 50
+save_freq: 50
+
+data:
+  dataset: sha
+  data_path: datasets/SHA
+  protocol: protocols/sha-40.txt
+  label_percent: 0.4
+  batch_size: 16
+  num_workers: 8
+  crop_size: [256, 256]
+
+model:
+  name: vgg16bn
+  resume: ""
+
+train:
+  base_lr: 5.0e-5
+  backbone_lr: 1.0e-5
+  weight_decay: 1.0e-4
+  clip_grad: 5.0
+  ema_momentum: 0.998
+  phase1_end: 1500
+  phase2_end: 2000
+  epochs: 2075          # +75 phase3
+  semi_warmup: 50
+  phase3_lr: 1.0e-5
+  phase_lr:
+    "2": 5.0e-6
+    "3": 1.0e-5
+
+pseudo:
+  # SHA-L40 labeled pseudo-mask: energy_threshold / geo_weight
+  energy_threshold: 0.95
+  lambda_geo: 0.4
+  p_low: 0.1
+  p_high: 0.9
+  use_density_gate: true
+
+loss:
+  disc:
+    l2_threshold: 0.6
+    margin: 0.1
+    point_mask_weight: 0.0
+    invalid_disk_radius: 16
+  mask_constraint:
+    loss_mode: p2r_mc
+    bg_weight: 0.1
+    fg_weight: 0.005
+    one_point_weight: 0.0

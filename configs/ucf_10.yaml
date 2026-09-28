@@ -1,0 +1,53 @@
+# UCF-QNRF 10% — from best_ckpt/ucf-L10 (points / one-point dominant)
+tag: ucf-L10
+seed: 2024
+output: outputs
+print_freq: 50
+save_freq: 50
+
+data:
+  dataset: ucf
+  data_path: datasets/UCF
+  protocol: protocols/ucf-10.txt
+  label_percent: 0.1
+  batch_size: 16
+  num_workers: 8
+  crop_size: [256, 256]
+
+model:
+  name: vgg16bn
+  resume: ""
+
+train:
+  base_lr: 5.0e-5
+  backbone_lr: 1.0e-5
+  weight_decay: 5.0e-4
+  clip_grad: 5.0
+  ema_momentum: 0.998
+  phase1_end: 1500
+  phase2_end: 2000
+  epochs: 2500          # +500 phase3
+  semi_warmup: 50
+  phase3_lr: 1.0e-5
+  phase_lr:
+    "2": 5.0e-6
+    "3": 1.0e-5
+
+pseudo:
+  energy_threshold: 0.8
+  lambda_geo: 0.6
+  p_low: 0.1
+  p_high: 0.9
+  use_density_gate: true
+
+loss:
+  disc:
+    l2_threshold: 0.6
+    margin: 0.1
+    point_mask_weight: 1.0
+    invalid_disk_radius: 16
+  mask_constraint:
+    loss_mode: points
+    bg_weight: 0.0
+    fg_weight: 0.0
+    one_point_weight: 1.0

@@ -1,0 +1,54 @@
+# SHA 10% — from best_ckpt/sha-L10
+tag: sha-L10
+seed: 2024
+output: outputs
+print_freq: 50
+save_freq: 50
+
+data:
+  dataset: sha
+  data_path: datasets/SHA
+  protocol: protocols/sha-10.txt
+  label_percent: 0.1
+  batch_size: 16
+  num_workers: 8
+  crop_size: [256, 256]
+
+model:
+  name: vgg16bn
+  resume: ""
+
+train:
+  base_lr: 5.0e-5
+  backbone_lr: 1.0e-5
+  weight_decay: 1.0e-4
+  clip_grad: 5.0
+  ema_momentum: 0.998
+  phase1_end: 1500
+  phase2_end: 2000
+  epochs: 2100
+  semi_warmup: 50
+  phase3_lr: 5.0e-6
+  phase_lr:
+    "2": 5.0e-6
+    "3": 5.0e-6
+
+pseudo:
+  # SHA-L10 labeled pseudo-mask: energy_threshold / geo_weight
+  energy_threshold: 0.8
+  lambda_geo: 0.6
+  p_low: 0.1
+  p_high: 0.9
+  use_density_gate: true
+
+loss:
+  disc:
+    l2_threshold: 0.6
+    margin: 0.1
+    point_mask_weight: 1.0
+    invalid_disk_radius: 16
+  mask_constraint:
+    loss_mode: p2r_mc
+    bg_weight: 0.0
+    fg_weight: 0.005
+    one_point_weight: 0.0

@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pth
+*.pth.tmp
+outputs/
+*.log
+.DS_Store
+.vscode/
+datasets/SHA
+datasets/UCF
+datasets/JHU
+!datasets/README.md
