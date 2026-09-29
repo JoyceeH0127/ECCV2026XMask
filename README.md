@@ -1,6 +1,6 @@
 # ECCV 2026 XMask
 
-Repository of **Exclusivity-Guided Mask Learning for Semi-Supervised Crowd Instance Segmentation and Counting**, ECCV 2026 Spotloght🌟.
+Repository of **Exclusivity-Guided Mask Learning for Semi-Supervised Crowd Instance Segmentation and Counting**, ECCV 2026 Spotlight🌟.
 
 ## Key contributions
 
